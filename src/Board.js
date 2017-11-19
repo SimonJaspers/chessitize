@@ -1,5 +1,8 @@
-/* A regular chess game's starting position */
-const START_POSITION = [
+/**
+ * Returns a board that holds a default start position
+ * @returns {[[string]]}
+ */
+const StartPosition = () => [
   ["r", "n", "b", "q", "k", "b", "n", "r"],
   ["p", "p", "p", "p", "p", "p", "p", "p"],
   [" ", " ", " ", " ", " ", " ", " ", " "],
@@ -12,6 +15,46 @@ const START_POSITION = [
 
 const clone = board => board.slice(0).map(row => row.slice(0));
 
+/**
+ * Returns the piece (" " if empty) at a position in a board
+ * @param {[[string]]} board 
+ * @param {Square} square 
+ * @returns {string}
+ */
+const getPieceAtSquare = (board, square) => board[square.row][square.file];
+
+/**
+ * Sets the square in a board to a (piece/empty) string
+ *
+ * @param {[[string]]} board 
+ * @param {Square} square 
+ * @param {string} value 
+ */
+const setSquareString = (board, square, value) => {
+  const newBoard = clone(board);
+  newBoard[square.row][square.file] = value;
+  return newBoard;
+};
+
+/**
+ * Returns a new piece in which the fromSquare is empty, and
+ * the toSquare has the moved piece. Note: this function does
+ * not perform any validity checks
+ * 
+ * @param {[[string]]} board 
+ * @param {Square} fromSquare 
+ * @param {Square} toSquare 
+ * @returns {[[string]]}
+ */
+const movePieceInBoard = (board, fromSquare, toSquare) =>
+  setSquareString(
+    setSquareString(board, fromSquare, " "), // Board without fromSquare
+    toSquare,
+    getPieceAtSquare(board, fromSquare) // Get value from old square
+  );
+
 export default {
-  StartPosition: () => clone(START_POSITION)
+  StartPosition,
+  getPieceAtSquare,
+  movePieceInBoard
 };
