@@ -1,5 +1,35 @@
 # chessitize
-A tool to digitize chess games based on a picture-per-move
+---
+
+A tool to digitize chess games based on a picture-per-move. The project’s (provisional) name comes from:
+
+> **digitize** `/ˈdɪdʒɪtʌɪz//`
+>
+> &nbsp;&nbsp;verb
+>
+> &nbsp;&nbsp;&nbsp;&nbsp;*convert (pictures or sound) into a digital form that can be processed by a computer.*
+>
+> &nbsp;
+
+> **chess** `/tʃɛs/`
+>
+> &nbsp;&nbsp;noun
+> 
+> &nbsp;&nbsp;&nbsp;&nbsp;*mental torture* – Garry Kasparov
+>
+> &nbsp;
+
+> **chastise** `/tʃaˈstʌɪz/`
+>
+> &nbsp;&nbsp;verb
+>
+> &nbsp;&nbsp;&nbsp;&nbsp;*rebuke or reprimand severely.*
+> 
+> &nbsp;
+
+<sub>* we might need a more cheerful name...
+
+---
 
 ## Approach
 
