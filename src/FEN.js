@@ -48,7 +48,7 @@ const fenRowToPieceCodes = fenRow =>
 
 /**
  * Transform a FEN string in to a game state
- * @param string} fen 
+ * @param {string} fen 
  * @returns {GameState}
  */
 const fenToGameState = fen => {
