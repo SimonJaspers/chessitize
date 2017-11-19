@@ -1,4 +1,4 @@
-var directory = require.context("./");
+const directory = require.context("./");
 directory
   .keys()
   .filter(k => k.includes(".test.js"))
