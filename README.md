@@ -34,8 +34,8 @@ Create a Raspberry Pi chess clock with a camera attachment. When a player hits t
 
 ## TODO
 
- 1. Configure build tools & tests 😪
- 2. Create logic for:
+ 1. ~~Configure build tools & tests~~ 😪
+ 2. Create logic to extract potential moves from two photos:
  
 ```
  (photoOfChessBoardBefore, photoOfChessBoardAfter) -> [ { move, likeliness } ]
