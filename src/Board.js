@@ -10,8 +10,8 @@ const START_POSITION = [
   ["R", "N", "B", "Q", "K", "B", "N", "R"]
 ];
 
+const clone = board => board.slice(0).map(row => row.slice(0));
+
 export default {
-  // Note: (Simon) Might want to make a clone to prevent
-  //               accidental mutation
-  START_POSITION
+  StartPosition: () => clone(START_POSITION)
 };

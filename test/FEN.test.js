@@ -20,7 +20,7 @@ const testData = [
   },
   {
     fen: FEN.START_POSITION,
-    board: Board.START_POSITION
+    board: Board.StartPosition()
   }
 ];
 
@@ -39,7 +39,7 @@ describe("FEN tools", () => {
         "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
       );
 
-      assert.deepEqual(startPos.board, Board.START_POSITION);
+      assert.deepEqual(startPos.board, Board.StartPosition());
 
       const somePos = FEN.fenToGameState(testData[0].fen);
       const someBoard = testData[0].board;

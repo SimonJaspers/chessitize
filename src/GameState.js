@@ -34,7 +34,7 @@ const GameState = (
   fullMoves = 1
 ) => {
   return {
-    board: board || Board.START_POSITION,
+    board: board || Board.StartPosition(),
     // Side to move
     whiteToMove: toMove === "w",
     blackToMove: toMove === "b",
