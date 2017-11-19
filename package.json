@@ -1,0 +1,28 @@
+{
+  "name": "chessitize",
+  "version": "0.1.0",
+  "description": "A tool to digitize chess games based on a picture-per-move",
+  "main": "src/main.js",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "scss": "sass style/style.scss:lib/style.css",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SimonJaspers/chessitize.git"
+  },
+  "author": "Simon Jaspers",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SimonJaspers/chessitize/issues"
+  },
+  "homepage": "https://github.com/SimonJaspers/chessitize#readme",
+  "devDependencies": {
+    "webpack": "^3.8.1"
+  }
+}
