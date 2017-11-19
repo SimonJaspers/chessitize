@@ -58,6 +58,7 @@ typings/
 .env
 
 # Build/dev files
+tmp/
 package-lock.json
 *.map
 .sass-cache/

@@ -51,3 +51,11 @@ Create a Raspberry Pi chess clock with a camera attachment. When a player hits t
 ``` 
    (initialFEN, [ { move, likeliness } ], [ possibleMove ]) -> nextFEN
 ```
+
+## Development tools
+ - Run `npm install` to get started
+ - Run `npm test` to run tests *once* (try to remember to do this before pushing...)
+ - Run `npm run test:w` to automatically compile test bundles and run tests.
+ - Run `build` to compile main javascript bundle
+ - Run `scss` to compile scss files. (Make sure to `gem install sass` first)
+ - Run `npm start` to start a local server (Make sure to `npm install -g http-server` first)

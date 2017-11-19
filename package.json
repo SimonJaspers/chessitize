@@ -8,9 +8,13 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "build:t:w": "webpack --watch --config webpack.test.config.js",
+    "test":
+      "webpack --config webpack.test.config.js && mocha tmp/testBundle.js",
+    "test:w": "npm run build:t:w | mocha tmp/testBundle.js --watch",
     "scss": "sass style/style.scss:lib/style.css",
-    "build": "webpack"
+    "build": "webpack",
+    "start": "http-server"
   },
   "repository": {
     "type": "git",
@@ -23,6 +27,7 @@
   },
   "homepage": "https://github.com/SimonJaspers/chessitize#readme",
   "devDependencies": {
+    "mocha": "^4.0.1",
     "webpack": "^3.8.1"
   }
 }
