@@ -15,7 +15,7 @@ A tool to digitize chess games based on a picture-per-move
 
 # Initial goals
 
-**Input** a set of top-view images taken from the same (top-view) angle (one for every move), **output** a (PGN)[https://en.wikipedia.org/wiki/Portable_Game_Notation] of the game to archive/analyze.
+**Input** a set of top-view images taken from the same (top-view) angle (one for every move), **output** a [PGN](https://en.wikipedia.org/wiki/Portable_Game_Notation) of the game to archive/analyze.
 
 # Stretch goals
 
