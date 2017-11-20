@@ -1,17 +1,15 @@
-import board from "./../Board";
+import { getPieceAtSquare } from "./../Board";
 import Square from "./../Square";
 import { Move } from "./../Moves";
 
 import { pieceIsBlack, pieceIsWhite, pieceIsEmpty } from "./../piece";
-
-const { getPieceAtSquare } = board;
 
 /**
  * Returns a list of possible moves for a square that holds a pawn
  * @param {GameState} state 
  * @param {Square} square 
  */
-const getPawnMoves = (state, square) => {
+export const getPawnMoves = (state, square) => {
   const board = state.board;
   const piece = getPieceAtSquare(board, square);
   const isBlack = pieceIsBlack(piece);
@@ -65,5 +63,3 @@ const getPawnMoves = (state, square) => {
 
   return moves;
 };
-
-export default getPawnMoves;

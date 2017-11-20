@@ -84,4 +84,12 @@ describe("Moves", () => {
       assert.equal(bMoves[1].to.code, "h3");
     });
   });
+
+  describe("Knight ♘♞", () => {
+    it("jumps to the right squares", () => {
+      const whiteStartMoves = getMoves(GameState(), Square.fromCode("b1"));
+
+      assert.equal(whiteStartMoves.length, 2);
+    });
+  });
 });

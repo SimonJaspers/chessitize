@@ -1,9 +1,11 @@
-import Board from "./../src/Board";
+import {
+  StartPosition,
+  getPieceAtSquare,
+  movePieceInBoard
+} from "./../src/Board";
 import Square from "./../src/Square";
 import assert from "assert";
 import FEN from "./../src/FEN";
-
-const { StartPosition, getPieceAtSquare, movePieceInBoard } = Board;
 
 describe("Board", () => {
   describe("StartPosition", () => {

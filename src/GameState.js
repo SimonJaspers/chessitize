@@ -1,4 +1,4 @@
-import Board from "./Board";
+import { StartPosition } from "./Board";
 
 /**
  * Represents a chess board during a game
@@ -34,7 +34,7 @@ const GameState = (
   fullMoves = 1
 ) => {
   return {
-    board: board || Board.StartPosition(),
+    board: board || StartPosition(),
     // Side to move
     whiteToMove: toMove === "w",
     blackToMove: toMove === "b",

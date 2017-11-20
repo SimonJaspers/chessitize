@@ -2,7 +2,7 @@
  * Returns a board that holds a default start position
  * @returns {[[string]]}
  */
-const StartPosition = () => [
+export const StartPosition = () => [
   ["r", "n", "b", "q", "k", "b", "n", "r"],
   ["p", "p", "p", "p", "p", "p", "p", "p"],
   [" ", " ", " ", " ", " ", " ", " ", " "],
@@ -21,7 +21,8 @@ const clone = board => board.slice(0).map(row => row.slice(0));
  * @param {Square} square 
  * @returns {string}
  */
-const getPieceAtSquare = (board, square) => board[square.row][square.file];
+export const getPieceAtSquare = (board, square) =>
+  board[square.row][square.file];
 
 /**
  * Sets the square in a board to a (piece/empty) string
@@ -46,15 +47,9 @@ const setSquareString = (board, square, value) => {
  * @param {Square} toSquare 
  * @returns {[[string]]}
  */
-const movePieceInBoard = (board, fromSquare, toSquare) =>
+export const movePieceInBoard = (board, fromSquare, toSquare) =>
   setSquareString(
     setSquareString(board, fromSquare, " "), // Board without fromSquare
     toSquare,
     getPieceAtSquare(board, fromSquare) // Get value from old square
   );
-
-export default {
-  StartPosition,
-  getPieceAtSquare,
-  movePieceInBoard
-};

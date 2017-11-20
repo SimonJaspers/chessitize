@@ -17,3 +17,11 @@ export const pieceIsWhite = piece =>
  */
 export const pieceIsBlack = piece =>
   piece && !pieceIsEmpty(piece) && piece.toLowerCase() === piece;
+
+/**
+ * @param {string} p1 
+ * @param {string} p2 
+ * @returns {boolean}
+ */
+export const piecesAreSameColor = (p1, p2) =>
+  pieceIsWhite(p1) === pieceIsWhite(p2);

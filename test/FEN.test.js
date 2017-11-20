@@ -1,6 +1,6 @@
 import FEN from "./../src/FEN";
 import GameState from "./../src/GameState";
-import Board from "./../src/Board";
+import { StartPosition } from "./../src/Board";
 
 import assert from "assert";
 
@@ -20,7 +20,7 @@ const testData = [
   },
   {
     fen: FEN.START_POSITION,
-    board: Board.StartPosition()
+    board: StartPosition()
   }
 ];
 
@@ -39,7 +39,7 @@ describe("FEN tools", () => {
         "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
       );
 
-      assert.deepEqual(startPos.board, Board.StartPosition());
+      assert.deepEqual(startPos.board, StartPosition());
 
       const somePos = FEN.fenToGameState(testData[0].fen);
       const someBoard = testData[0].board;

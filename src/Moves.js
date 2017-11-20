@@ -1,12 +1,12 @@
 import GameState from "./GameState";
 import Square from "./Square";
 
-import getPawnMoves from "./moves/pawn";
+import { getPawnMoves } from "./moves/pawn";
+import { getKnightMoves } from "./moves/knight";
+
 import { pieceIsBlack, pieceIsWhite, pieceIsEmpty } from "./piece";
 
-import board from "./Board";
-
-const { getPieceAtSquare } = board;
+import { getPieceAtSquare } from "./Board";
 
 /**
  * Returns a list of possible moves for a piece on a square
@@ -21,6 +21,12 @@ const getMovesForPiece = (state, square, piece) => {
     case "p":
     case "P":
       return getPawnMoves(state, square);
+    case "n":
+    case "N":
+      console.log("test");
+      console.log(getPawnMoves);
+      console.log(getKnightMoves);
+      return getKnightMoves(state, square);
     default:
       return [];
   }

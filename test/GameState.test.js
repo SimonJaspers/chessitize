@@ -1,5 +1,5 @@
 import GameState from "./../src/GameState";
-import Board from "./../src/Board";
+import { StartPosition } from "./../src/Board";
 
 import assert from "assert";
 
@@ -7,7 +7,7 @@ describe("GameState", () => {
   it("Constructs chess' starting position by default", () => {
     const state = GameState();
 
-    assert.deepEqual(state.board, Board.StartPosition());
+    assert.deepEqual(state.board, StartPosition());
     assert.equal(state.blackCanCastleLong, true);
     assert.equal(state.blackCanCastleShort, true);
     assert.equal(state.whiteCanCastleLong, true);
