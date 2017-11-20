@@ -45,19 +45,19 @@ const getPawnMoves = (state, square) => {
   const [firstStep, secondStep, takesLeft, takesRight] = piecesAtValidSquares;
 
   if (canMove(firstStep)) {
-    moves.push(firstStep);
+    moves.push(Move(square, firstStep.square, false, true));
 
     if (isStartPos && canMove(secondStep)) {
-      moves.push(secondStep);
+      moves.push(Move(square, secondStep.square, false, true));
     }
   }
 
   if (canTake(takesLeft)) {
-    moves.push(takesLeft);
+    moves.push(Move(square, takesLeft.square, true, true));
   }
 
   if (canTake(takesRight)) {
-    moves.push(takesRight);
+    moves.push(Move(square, takesRight.square, true, true));
   }
 
   return moves;
@@ -70,10 +70,24 @@ const getPawnMoves = (state, square) => {
  * @property {Square} from
  * @property {Square} to
  * @property {boolean} takes
- * @property {boolean} check
  * @property {boolean} pawnMove 
  * 
  */
+
+/**
+ * Creates a move to help create a PGN step
+ * @param {Square} from 
+ * @param {Square} to 
+ * @param {boolean} takes 
+ * @param {boolean} pawnMove 
+ * @returns {Move}
+ */
+const Move = (from, to, takes, pawnMove) => ({
+  from,
+  to,
+  takes,
+  pawnMove
+});
 
 /**
  * Returns a series of moves a piece can make on a board.

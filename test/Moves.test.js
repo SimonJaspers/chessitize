@@ -14,14 +14,14 @@ describe("Moves", () => {
 
       assert.equal(moves.length, 2);
 
-      assert.equal(moves[0].square.code, "a3");
-      assert.equal(moves[1].square.code, "a4");
+      assert.equal(moves[0].to.code, "a3");
+      assert.equal(moves[1].to.code, "a4");
 
       const bMoves = getPawnMoves(GameState(), Square.fromCode("d7"));
       assert.equal(bMoves.length, 2);
 
-      assert.equal(bMoves[0].square.code, "d6");
-      assert.equal(bMoves[1].square.code, "d5");
+      assert.equal(bMoves[0].to.code, "d6");
+      assert.equal(bMoves[1].to.code, "d5");
     });
 
     it("handles single pawn moves", () => {
@@ -31,7 +31,7 @@ describe("Moves", () => {
       const wMoves = getPawnMoves(wMove, Square.fromCode("a4"));
 
       assert.equal(wMoves.length, 1);
-      assert.equal(wMoves[0].square.code, "a5");
+      assert.equal(wMoves[0].to.code, "a5");
 
       const bMove = FEN.fenToGameState(
         "rnbqkbnr/ppp1pppp/8/3p4/P7/7P/1PPPPPP1/RNBQKBNR b KQkq - 0 2"
@@ -39,7 +39,7 @@ describe("Moves", () => {
       const bMoves = getPawnMoves(bMove, Square.fromCode("d5"));
 
       assert.equal(bMoves.length, 1);
-      assert.equal(bMoves[0].square.code, "d4");
+      assert.equal(bMoves[0].to.code, "d4");
     });
 
     it("handles takes", () => {
@@ -53,8 +53,8 @@ describe("Moves", () => {
       assert.equal(wMoves.length, 3);
       assert.equal(bMoves.length, 3);
 
-      assert.deepEqual(wMoves.map(m => m.square.code), ["f5", "e5", "g5"]);
-      assert.deepEqual(bMoves.map(m => m.square.code), ["e4", "d4", "f4"]);
+      assert.deepEqual(wMoves.map(m => m.to.code), ["f5", "e5", "g5"]);
+      assert.deepEqual(bMoves.map(m => m.to.code), ["e4", "d4", "f4"]);
     });
 
     it("handles en passant", () => {
@@ -65,8 +65,8 @@ describe("Moves", () => {
       const wMoves = getPawnMoves(whiteEnPassantState, Square.fromCode("e5"));
 
       assert.equal(wMoves.length, 3);
-      assert.equal(wMoves[1].square.code, "d6");
-      assert.equal(wMoves[2].square.code, "f6");
+      assert.equal(wMoves[1].to.code, "d6");
+      assert.equal(wMoves[2].to.code, "f6");
 
       const blackEnPassantState = FEN.fenToGameState(
         "rnbqkbnr/pp1p1p1p/2P5/4p3/5PpP/8/PPP1P1P1/RNBQKBNR b KQkq h3 0 5"
@@ -75,7 +75,7 @@ describe("Moves", () => {
       const bMoves = getPawnMoves(blackEnPassantState, Square.fromCode("g4"));
 
       assert.equal(bMoves.length, 2);
-      assert.equal(bMoves[1].square.code, "h3");
+      assert.equal(bMoves[1].to.code, "h3");
     });
   });
 });
