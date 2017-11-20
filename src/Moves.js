@@ -3,6 +3,7 @@ import Square from "./Square";
 
 import { getPawnMoves } from "./moves/pawn";
 import { getKnightMoves } from "./moves/knight";
+import { getKingMoves } from "./moves/king";
 
 import { pieceIsBlack, pieceIsWhite, pieceIsEmpty } from "./piece";
 
@@ -23,10 +24,10 @@ const getMovesForPiece = (state, square, piece) => {
       return getPawnMoves(state, square);
     case "n":
     case "N":
-      console.log("test");
-      console.log(getPawnMoves);
-      console.log(getKnightMoves);
       return getKnightMoves(state, square);
+    case "k":
+    case "K":
+      return getKingMoves(state, square);
     default:
       return [];
   }
