@@ -60,7 +60,7 @@ Create a Raspberry Pi chess clock with a camera attachment. When a player hits t
 ## Challenges
 
  - Image analysis: top-down views with consistent lighting are easy. Lower the camera angle, move it between shots, partially obscure the view or dimm the lights and stuff gets significantly harder...
- - Some chess rules are a bit tricky to implement (namely: *en passant*, castling, three-fold repetition & the fifty-move rule)
+ - Some chess rules are a bit tricky to implement (namely: *en passant*, castling, three-fold repetition & the fifty-move rule, promotion)
 
 ## TODO
 
