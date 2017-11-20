@@ -1,11 +1,9 @@
-import Moves from "./../src/Moves";
+import getPawnMoves from "./../src/moves/pawn";
 import GameState from "./../src/GameState";
 import Square from "./../src/Square";
 import FEN from "./../src/FEN";
 
 import assert from "assert";
-
-const { getPawnMoves } = Moves;
 
 describe("Moves", () => {
   describe("Pawn ♙♟", () => {
