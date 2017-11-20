@@ -1,8 +1,21 @@
 import GameState from "./GameState";
 import Square from "./Square";
 
-import { getPawnMoves } from "./moves/pawn";
+import getPawnMoves from "./moves/pawn";
+import { pieceIsBlack, pieceIsWhite, pieceIsEmpty } from "./piece";
 
+import board from "./Board";
+
+const { getPieceAtSquare } = board;
+
+/**
+ * Returns a list of possible moves for a piece on a square
+ * in a game
+ * @param {GameState} state 
+ * @param {Square} square 
+ * @param {string} piece 
+ * @returns {[Move]}
+ */
 const getMovesForPiece = (state, square, piece) => {
   switch (piece) {
     case "p":
@@ -32,7 +45,7 @@ const getMovesForPiece = (state, square, piece) => {
  * @param {boolean} pawnMove 
  * @returns {Move}
  */
-const Move = (from, to, takes, pawnMove) => ({
+export const Move = (from, to, takes, pawnMove) => ({
   from,
   to,
   takes,
@@ -48,7 +61,7 @@ const Move = (from, to, takes, pawnMove) => ({
  * @param {Square} square 
  * @returns {[Move]}
  */
-const getMoves = (state, square) => {
+export const getMoves = (state, square) => {
   const board = state.board;
   const piece = getPieceAtSquare(board, square);
 
@@ -57,7 +70,7 @@ const getMoves = (state, square) => {
   if (pieceIsWhite(piece) && !state.whiteToMove) return [];
 
   // Step 1:
-  // get all regular moves
+  const moves = getMovesForPiece(state, square, piece);
 
   // Step 2:
   // calculate all potential new game states
@@ -65,6 +78,6 @@ const getMoves = (state, square) => {
   // Step 3:
   // remove moves that cause game states in which we
   // are in check
-};
 
-export default { Move, getMoves };
+  return moves;
+};

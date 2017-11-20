@@ -1,10 +1,10 @@
 import board from "./../Board";
 import Square from "./../Square";
-import moves from "./../Moves";
+import { Move } from "./../Moves";
+
 import { pieceIsBlack, pieceIsWhite, pieceIsEmpty } from "./../piece";
 
 const { getPieceAtSquare } = board;
-const { Move } = moves;
 
 /**
  * Returns a list of possible moves for a square that holds a pawn
