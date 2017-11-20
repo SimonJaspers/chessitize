@@ -8,24 +8,24 @@ A tool to digitize chess games based on a picture-per-move. The project’s (pro
 > &nbsp;&nbsp;verb
 >
 > &nbsp;&nbsp;&nbsp;&nbsp;*convert (pictures or sound) into a digital form that can be processed by a computer.*
->
-> &nbsp;
+
+Because it’s digitizing a physical game.
 
 > **chess** `/tʃɛs/`
 >
 > &nbsp;&nbsp;noun
 > 
 > &nbsp;&nbsp;&nbsp;&nbsp;*mental torture* – Garry Kasparov
->
-> &nbsp;
+
+Because the game is chess.
 
 > **chastise** `/tʃaˈstʌɪz/`
 >
 > &nbsp;&nbsp;verb
 >
 > &nbsp;&nbsp;&nbsp;&nbsp;*rebuke or reprimand severely.*
-> 
-> &nbsp;
+
+Because the digitized game and its analysis helps you realize how bad you really are at this game...
 
 <sub>* we might need a more cheerful name...
 
