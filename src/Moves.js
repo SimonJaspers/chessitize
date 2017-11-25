@@ -8,6 +8,7 @@ import { getKingMoves } from "./moves/king";
 import { pieceIsBlack, pieceIsWhite, pieceIsEmpty } from "./piece";
 
 import { getPieceAtSquare } from "./Board";
+import { getBishopMoves } from "./moves/bishop";
 
 /**
  * Returns a list of possible moves for a piece on a square
@@ -28,6 +29,9 @@ const getMovesForPiece = (state, square, piece) => {
     case "k":
     case "K":
       return getKingMoves(state, square);
+    case "b":
+    case "B":
+      return getBishopMoves(state, square);
     default:
       return [];
   }
