@@ -95,19 +95,52 @@ describe("Moves", () => {
     });
   });
 
-  describe("Bishop", () => {
+  describe("Bishop ♗♝", () => {
+    const state = FEN.fenToGameState(
+      "rnbqkbnr/pppp2pp/4pp2/8/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq - 0 3"
+    );
+
+    const whiteMoves = getMoves(state, Square.fromCode("c4"));
+
     it("moves in four directions", () => {
-      const state = FEN.fenToGameState(
-        "rnbqkbnr/pppp2pp/4pp2/8/2B1P3/8/PPPP1PPP/RNBQK1NR w KQkq - 0 3"
-      );
-
-      const whiteMoves = getMoves(state, Square.fromCode("c4"));
-
       assert.equal(whiteMoves.length, 8);
+    });
+
+    it("takes", () => {
+      const takes = whiteMoves.filter(m => m.takes);
+      assert.equal(takes.length, 1);
+      assert.equal(takes[0].to.code, "e6");
     });
   });
 
-  describe("King", () => {
+  describe("Rook ♖♜", () => {
+    const state = FEN.fenToGameState(
+      "2bqkbnr/1ppp3p/4ppp1/p1rB4/3nP3/2PP1P1P/PP2N1P1/RNBQK2R b KQk - 2 11"
+    );
+
+    const rMoves = getMoves(state, Square.fromCode("c5"));
+
+    it("moves horizontally and vertically", () => {
+      assert.equal(rMoves.length, 5);
+    });
+
+    it("takes", () => {
+      assert.equal(rMoves.filter(m => m.takes).length, 2);
+    });
+  });
+
+  describe("Queen ♕♛", () => {
+    const state = FEN.fenToGameState(
+      "r1bqkbnr/pppp2pp/2n1pp2/8/2B1P3/5Q2/PPPP1PPP/RNB1K1NR w KQkq - 2 4"
+    );
+    const qMoves = getMoves(state, Square.fromCode("f3"));
+
+    it("moves diagonally, vertically and horizontally", () => {
+      assert.equal(qMoves.length, 14);
+    });
+  });
+
+  describe("King ♔♚", () => {
     it("can move around", () => {
       const wState = FEN.fenToGameState("8/6p1/4k3/8/8/2K5/8/8 w - -");
       const wMoves = getMoves(wState, Square.fromCode("c3"));

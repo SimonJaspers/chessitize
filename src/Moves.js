@@ -9,6 +9,8 @@ import { pieceIsBlack, pieceIsWhite, pieceIsEmpty } from "./piece";
 
 import { getPieceAtSquare } from "./Board";
 import { getBishopMoves } from "./moves/bishop";
+import { getQueenMoves } from "./moves/queen";
+import { getRookMoves } from "./moves/rook";
 
 /**
  * Returns a list of possible moves for a piece on a square
@@ -32,6 +34,12 @@ const getMovesForPiece = (state, square, piece) => {
     case "b":
     case "B":
       return getBishopMoves(state, square);
+    case "q":
+    case "Q":
+      return getQueenMoves(state, square);
+    case "r":
+    case "R":
+      return getRookMoves(state, square);
     default:
       return [];
   }
