@@ -1,5 +1,5 @@
 import Square from "./../src/Square";
-
+import { prop, xProd } from "./../src/utils";
 import assert from "assert";
 
 const testData = [
@@ -34,6 +34,24 @@ describe("Square", () => {
         assert.equal(square.row, rowNr);
         assert.equal(square.file, fileNr);
       });
+    });
+  });
+
+  describe("allInBoard", () => {
+    const allSquares = Square.allInBoard();
+
+    it("returns 64 squares", () => {
+      assert.equal(allSquares.length, 64);
+    });
+
+    it("has all squares", () => {
+      assert.deepEqual(
+        allSquares.map(prop("code")).sort(),
+        xProd(
+          ["a", "b", "c", "d", "e", "f", "g", "h"],
+          [1, 2, 3, 4, 5, 6, 7, 8]
+        ).map(pair => pair.join(""))
+      );
     });
   });
 });
