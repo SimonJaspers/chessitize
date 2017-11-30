@@ -1,21 +1,21 @@
 /**
  * Trim a string using native trim
- * 
- * @param {string} str 
+ *
+ * @param {string} str
  * @return {string}
  */
 export const trim = str => str.trim();
 
 /**
- * @param {*} x 
- * @returns {boolean} 
+ * @param {*} x
+ * @returns {boolean}
  */
 const isObject = x => Object.prototype.toString.call(x) === "[object Object]";
 
 /**
  * Maps arrays or objects
  * @param {function} f - a -> b
- * @param {*} functor 
+ * @param {*} functor
  * @returns {*}
  */
 export const map = (f, functor) => {
@@ -34,7 +34,7 @@ export const map = (f, functor) => {
 /**
  * Filters arrays or objects.
  * @param {function} pred - Filter function of x -> bool
- * @param {*} filterable 
+ * @param {*} filterable
  * @returns {*}
  */
 export const filter = (pred, filterable) => {
@@ -50,3 +50,26 @@ export const filter = (pred, filterable) => {
 
   return filterable;
 };
+
+/**
+ * Create a range of numbers, starting at 1
+ * @param {number} n - The length/end of the range
+ * @returns {[number]}
+ */
+export const range = n => Array.from({ length: n }, (_, i) => i);
+
+/**
+ * Returns a list of all combinations of two arrays
+ * @param {[*]} xs
+ * @param {[*]} ys
+ * @returns {[[*]]}
+ */
+export const xProd = (xs, ys) =>
+  xs.reduce((acc, x) => acc.concat(ys.map(y => [x, y])), []);
+
+/**
+ *
+ * @param {string} key
+ * @returns {function}
+ */
+export const prop = key => obj => obj[key];
