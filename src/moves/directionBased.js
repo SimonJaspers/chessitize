@@ -6,11 +6,12 @@ import Square from "./../Square";
 /**
  * Recursively explores a direction on a board until the piece
  * is out of moves
- * @param {GameState} state 
- * @param {string} piece 
- * @param {Square} square 
- * @param {[number]} direction 
- * @param {[Move]} results 
+ * @param {GameState} state
+ * @param {string} piece
+ * @param {Square} square
+ * @param {[number]} direction
+ * @param {[number]} delta
+ * @param {[Move]} results
  * @returns {[Move]}
  */
 const getMovesUntilNotEmpty = (
@@ -18,9 +19,12 @@ const getMovesUntilNotEmpty = (
   piece,
   square,
   direction,
+  delta = [0, 0],
   results = []
 ) => {
-  const nextSquare = Square.relativeFrom(square, direction);
+  const newDelta = [delta[0] + direction[0], delta[1] + direction[1]];
+
+  const nextSquare = Square.relativeFrom(square, newDelta);
 
   // Edge of board, end of move
   if (!nextSquare.inBounds) return results;
@@ -33,15 +37,16 @@ const getMovesUntilNotEmpty = (
   if (hasPiece && !hasEnemyPiece) return results;
 
   // We can make a move for sure
-  const move = Move(square, nextSquare, hasPiece && hasEnemyPiece, false);
+  const move = Move(square, nextSquare, state);
 
   if (hasPiece) return results.concat(move);
 
   return getMovesUntilNotEmpty(
     state,
     piece,
-    nextSquare,
+    square,
     direction,
+    newDelta,
     results.concat(move)
   );
 };
@@ -49,9 +54,9 @@ const getMovesUntilNotEmpty = (
 /**
  * Gets a list of moves for a piece on a square based on a set of
  * directions
- * @param {GameState} state 
- * @param {Square} square 
- * @param {[[number]]} directions 
+ * @param {GameState} state
+ * @param {Square} square
+ * @param {[[number]]} directions
  * @returns {[Move]}
  */
 export const getDirectionalMoves = (state, square, directions) => {

@@ -6,8 +6,8 @@ import { pieceIsBlack, pieceIsWhite, pieceIsEmpty } from "./../piece";
 
 /**
  * Returns a list of possible moves for a square that holds a pawn
- * @param {GameState} state 
- * @param {Square} square 
+ * @param {GameState} state
+ * @param {Square} square
  */
 export const getPawnMoves = (state, square) => {
   const board = state.board;
@@ -46,19 +46,19 @@ export const getPawnMoves = (state, square) => {
   const [firstStep, secondStep, takesLeft, takesRight] = piecesAtValidSquares;
 
   if (canMove(firstStep)) {
-    moves.push(Move(square, firstStep.square, false, true));
+    moves.push(Move(square, firstStep.square, state));
 
     if (isStartPos && canMove(secondStep)) {
-      moves.push(Move(square, secondStep.square, false, true));
+      moves.push(Move(square, secondStep.square, state));
     }
   }
 
   if (canTake(takesLeft)) {
-    moves.push(Move(square, takesLeft.square, true, true));
+    moves.push(Move(square, takesLeft.square, state));
   }
 
   if (canTake(takesRight)) {
-    moves.push(Move(square, takesRight.square, true, true));
+    moves.push(Move(square, takesRight.square, state));
   }
 
   return moves;

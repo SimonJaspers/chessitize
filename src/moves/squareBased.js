@@ -4,8 +4,8 @@ import { Move } from "./../Moves";
 import Square from "./../Square";
 
 /**
- * @param {GameState} state 
- * @param {Square} square 
+ * @param {GameState} state
+ * @param {Square} square
  * @param {[[number]] relatives - Square locations [dRow, dFile] relative to this square}
  * @returns {[Moves]}
  */
@@ -19,5 +19,5 @@ export const getSquareMoves = (state, square, relatives) => {
     // Only empty squares or squares with enemy pieces
     .filter(to => to.piece === " " || !piecesAreSameColor(thisPiece, to.piece));
 
-  return toSquares.map(to => Move(square, to.square, to.piece !== " ", false));
+  return toSquares.map(to => Move(square, to.square, state));
 };

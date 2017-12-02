@@ -73,3 +73,11 @@ export const xProd = (xs, ys) =>
  * @returns {function}
  */
 export const prop = key => obj => obj[key];
+
+/**
+ * Compose 2
+ * @param {function} f
+ * @param {function} g
+ * @returns {function}
+ */
+export const compose = (f, g) => x => f(g(x));

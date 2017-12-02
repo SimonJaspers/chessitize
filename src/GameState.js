@@ -1,5 +1,7 @@
 import { StartPosition, movePieceInBoard, getPieceAtSquare } from "./Board";
 import { Move, getMoves } from "./Moves";
+import { compose } from "./utils";
+import { pieceIsBlack, pieceIsWhite } from "./piece";
 import Square from "./Square";
 
 /**
@@ -66,31 +68,38 @@ export const applyMoveToGameState = (state, move) =>
     undefined, // TODO: (Simon) Calculate castle options
     move.isPawnMove && move.to.row - move.from.row === 2, // TODO: (Simon) get en passant square
     state.halfMoves + 1,
-    state.fullMvoes + (state.whiteToMove ? 1 : 0)
+    state.moveNr + (state.whiteToMove ? 1 : 0)
   );
 
 /**
- *
  * @param {GameState} state
  * @returns {boolean}
  */
 export const hasCheck = state => {
-  const enemyKing = state.whiteToMove ? "K" : "k";
-  const squareToAttack = Square.allInBoard().find(
-    sq => getPieceAtSquare(state.board, sq) === enemyKing
-  );
-
-  const potentialState = Object.assign({}, state, {
-    whiteToMove: !state.whiteToMove,
-    blackToMove: !state.blackToMove,
-    enPassant: null
-  });
-
   return Square.allInBoard().some(square =>
-    getMoves(potentialState, square).some(
-      move => move.to.code === squareToAttack.code
-    )
+    getMoves(state, square).some(move => move.takesKing)
   );
+};
+
+// TODO: (Simon) DRY
+/**
+ * @param {GameState} state
+ * @returns {boolean}
+ */
+export const whiteInCheck = state => {
+  return Square.allInBoard()
+    .filter(sq => pieceIsBlack(getPieceAtSquare(state.board, sq)))
+    .some(square => getMoves(state, square).some(move => move.takesKing));
+};
+
+/**
+ * @param {GameState} state
+ * @returns {boolean}
+ */
+export const blackInCheck = state => {
+  return Square.allInBoard()
+    .filter(sq => pieceIsWhite(getPieceAtSquare(state.board, sq)))
+    .some(square => getMoves(state, square).some(move => move.takesKing));
 };
 
 export default GameState;
