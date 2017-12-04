@@ -1,7 +1,8 @@
 import GameState, {
   applyMoveToGameState,
   whiteInCheck,
-  blackInCheck
+  blackInCheck,
+  blackPieceAttacksSquare
 } from "./GameState";
 import Square from "./Square";
 
@@ -63,6 +64,8 @@ const getMovesForPiece = (state, square, piece) => {
  * @property {Square} to
  * @property {boolean} takes
  * @property {boolean} pawnMove
+ * @property {boolean} takesKing
+ * @property {boolean} castles
  *
  */
 
@@ -81,7 +84,10 @@ export const Move = (from, to, state) => ({
     getPieceAtSquare(state.board, to)
   ),
   takesKing: getPieceAtSquare(state.board, to).toLowerCase() === "k",
-  pawnMove: getPieceAtSquare(state.board, from).toLowerCase() === "p"
+  pawnMove: getPieceAtSquare(state.board, from).toLowerCase() === "p",
+  castles:
+    getPieceAtSquare(state.board, from).toLowerCase() === "k" &&
+    Math.abs(from.file - to.file) === 2
 });
 
 /**
@@ -117,11 +123,29 @@ export const getLegalMoves = (state, square) => {
 
   const moves = getMoves(state, square);
 
-  moves.forEach(m => {
-    if (movePutsOwnKingInCheck(state, m)) {
-      console.log("check");
+  if (state.whiteToMove && piece === "K" && !whiteInCheck(state)) {
+    if (state.whiteCanCastleLong) {
+      const clearPath = ["b1", "c1", "d1"]
+        .map(Square.fromCode)
+        .map(sq => getPieceAtSquare(state.board, sq))
+        .map(p => (console.log(p), p))
+        .every(pieceIsEmpty);
+
+      if (clearPath) {
+        const underAttack = ["a1", "c1", "d1"]
+          .map(Square.fromCode)
+          .some(sq => blackPieceAttacksSquare(state, sq));
+
+        if (!underAttack) {
+          moves.push(Move(square, Square.relativeFrom(square, [0, 2]), state));
+        }
+      }
     }
-  });
+
+    if (state.whiteCanCastleShort) {
+      // Check if "f1", "g1" or "h1" are under attack
+    }
+  }
 
   return moves.filter(move => !movePutsOwnKingInCheck(state, move));
 };

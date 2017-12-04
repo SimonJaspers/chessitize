@@ -37,22 +37,74 @@ const GameState = (
   halfMoves = 0,
   fullMoves = 1
 ) => {
-  return {
-    board: board || StartPosition(),
-    // Side to move
-    whiteToMove: toMove === "w",
-    blackToMove: toMove === "b",
-    // Castle options
-    whiteCanCastleShort: castleOptions.includes("K"),
-    whiteCanCastleLong: castleOptions.includes("Q"),
-    blackCanCastleShort: castleOptions.includes("k"),
-    blackCanCastleLong: castleOptions.includes("q"),
-    // En passant
-    enPassant: enPassantSquare === "-" ? null : enPassantSquare,
-    // Move numbers
-    halfMoves: +halfMoves,
-    moveNr: +fullMoves
-  };
+  return Object.assign(
+    {
+      board: board || StartPosition(),
+      // Side to move
+      whiteToMove: toMove === "w",
+      blackToMove: toMove === "b",
+
+      // En passant
+      enPassant: enPassantSquare === "-" ? null : enPassantSquare,
+      // Move numbers
+      halfMoves: +halfMoves,
+      moveNr: +fullMoves
+    },
+    castleOptionsFromString(castleOptions)
+  );
+};
+
+/**
+ * @param {string} castleStr
+ * @returns {Object}
+ */
+const castleOptionsFromString = castleStr => ({
+  whiteCanCastleShort: castleStr && castleStr.includes("K"),
+  whiteCanCastleLong: castleStr && castleStr.includes("Q"),
+  blackCanCastleShort: castleStr && castleStr.includes("k"),
+  blackCanCastleLong: castleStr && castleStr.includes("q")
+});
+
+const castleStrFromOptions = ({
+  whiteCanCastleShort,
+  whiteCanCastleLong,
+  blackCanCastleShort,
+  blackCanCastleLong
+}) =>
+  [
+    ["K", whiteCanCastleShort],
+    ["Q", whiteCanCastleLong],
+    ["k", blackCanCastleShort],
+    ["q", blackCanCastleLong]
+  ]
+    .filter(([c, pred]) => pred)
+    .map(([c, pred]) => c)
+    .join("");
+
+/**
+ * @param {GameState} state
+ * @param {Move} move
+ * @returns {string?}
+ */
+const castleOptionsDiff = (state, move) => {
+  let prevOptions = castleStrFromOptions(state);
+
+  if (!prevOptions) return null;
+
+  const piece = getPieceAtSquare(state.board, move.from);
+
+  switch (piece) {
+    case "k":
+      return prevOptions.replace("k", "").replace("q", "");
+    case "r":
+      return prevOptions.replace(move.from.file === 0 ? "q" : "k", "");
+    case "K":
+      return prevOptions.replace("K", "").replace("Q", "");
+    case "R":
+      return prevOptions.replace(move.from.file === 0 ? "Q" : "K", "");
+  }
+
+  return prevOptions;
 };
 
 /**
@@ -65,7 +117,7 @@ export const applyMoveToGameState = (state, move) =>
   GameState(
     movePieceInBoard(state.board, move.from, move.to),
     state.whiteToMove ? "b" : "w",
-    undefined, // TODO: (Simon) Calculate castle options
+    castleOptionsDiff(state, move),
     move.isPawnMove && move.to.row - move.from.row === 2, // TODO: (Simon) get en passant square
     state.halfMoves + 1,
     state.moveNr + (state.whiteToMove ? 1 : 0)
@@ -82,6 +134,10 @@ export const hasCheck = state => {
 };
 
 // TODO: (Simon) DRY
+// Note: (Simon) Having to recalculate all moves for a color every time one
+//               of these methods is called is very inefficient. Probably
+//               better to store possible moves with a game state
+
 /**
  * @param {GameState} state
  * @returns {boolean}
@@ -100,6 +156,18 @@ export const blackInCheck = state => {
   return Square.allInBoard()
     .filter(sq => pieceIsWhite(getPieceAtSquare(state.board, sq)))
     .some(square => getMoves(state, square).some(move => move.takesKing));
+};
+
+/**
+ * Returns whether one of the black pieces attacks a square
+ * @param {GameState} state
+ * @param {Square} square
+ * @returns {boolean}
+ */
+export const blackPieceAttacksSquare = (state, square) => {
+  return Square.allInBoard()
+    .filter(sq => pieceIsBlack(getPieceAtSquare(state.board, sq)))
+    .some(sq => getMoves(state, sq).some(move => move.to.code === square.code));
 };
 
 export default GameState;

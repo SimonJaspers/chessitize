@@ -1,7 +1,8 @@
-import GameState from "./../src/GameState";
+import GameState, { applyMoveToGameState } from "./../src/GameState";
 import Square from "./../src/Square";
 import FEN from "./../src/FEN";
 import { getLegalMoves } from "./../src/Moves";
+import { Move, getMoves } from "./../src/Moves";
 
 import assert from "assert";
 
@@ -206,6 +207,88 @@ describe("Moves", () => {
       );
 
       assert.equal(moves.length, 20);
+    });
+  });
+
+  describe("handles castling", () => {
+    describe("queenside", () => {
+      it("removes castling options from the FEN", () => {
+        const canCastle = FEN.fenToGameState(
+          "r1bqkbnr/ppp2ppp/2n1p3/3p4/3P4/2N1B3/PPPQPPPP/R3KBNR b KQkq - 3 4"
+        );
+
+        assert.equal(
+          canCastle.whiteCanCastleLong && canCastle.whiteCanCastleShort,
+          true
+        );
+
+        const rMove = Move(
+          Square.fromCode("a1"),
+          Square.fromCode("a2"),
+          canCastle
+        );
+
+        const kMove = Move(
+          Square.fromCode("e1"),
+          Square.fromCode("d1"),
+          canCastle
+        );
+
+        const noQSide = applyMoveToGameState(canCastle, rMove);
+
+        assert.equal(noQSide.whiteCanCastleLong, false);
+        assert.equal(noQSide.whiteCanCastleShort, true);
+
+        const noCastle = applyMoveToGameState(canCastle, kMove);
+
+        assert.equal(noCastle.whiteCanCastleLong, false);
+        assert.equal(noCastle.whiteCanCastleShort, false);
+      });
+
+      it("includes a castles move when possible", () => {
+        const canCastleQ = FEN.fenToGameState(
+          "r1bqk1nr/ppp2ppp/2n1p3/3p4/1b1P4/2N1B3/PPPQPPPP/R3KBNR w KQkq - 4 5"
+        );
+
+        const moves = getLegalMoves(canCastleQ, Square.fromCode("e1"));
+
+        assert.equal(moves.some(m => m.castles), true);
+      });
+    });
+
+    describe("kingside", () => {
+      it("removes castling options from the FEN", () => {
+        const canCastle = FEN.fenToGameState(
+          "r1bqk2r/ppp2ppp/2n1pn2/3p4/1b1P4/2N1BN2/PPPQPPPP/2KR1B1R b kq - 7 6"
+        );
+
+        assert.equal(
+          canCastle.blackCanCastleLong && canCastle.blackCanCastleShort,
+          true
+        );
+
+        const rMove = Move(
+          Square.fromCode("h8"),
+          Square.fromCode("f8"),
+          canCastle
+        );
+
+        const kMove = Move(
+          Square.fromCode("e8"),
+          Square.fromCode("f8"),
+          canCastle
+        );
+
+        const noKSide = applyMoveToGameState(canCastle, rMove);
+
+        assert.equal(noKSide.blackCanCastleLong, true);
+        assert.equal(noKSide.blackCanCastleShort, false);
+
+        const noCastle = applyMoveToGameState(canCastle, kMove);
+
+        assert.equal(noCastle.blackCanCastleLong, false);
+        assert.equal(noCastle.blackCanCastleShort, false);
+      });
     });
   });
 });
