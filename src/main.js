@@ -1,31 +1,71 @@
 import { squareChanges } from "./imageHandling/squareChanges";
 
-const testCvs = document.createElement("canvas");
-testCvs.width = testCvs.height = 256;
+const BoardImage = imgFile => {
+  const cvs = fx.canvas();
 
-const testCtx = testCvs.getContext("2d");
-testCtx.fillStyle = "black";
-testCtx.fillRect(0, 0, 128, 128);
-testCtx.fillRect(128, 128, 128, 128);
+  let transformFrom = [0, 256, 0, 0, 256, 0, 256, 256];
+  const transformTo = [0, 256, 0, 0, 256, 0, 256, 256];
 
-document.body.appendChild(testCvs);
+  const fourPoints = ko.observableArray([]);
+  fourPoints.subscribe(points => {
+    if (points.length === 4) {
+      transformFrom = points.reduce((acc, { x, y }) => acc.concat(x, y), []);
+      redraw();
+      fourPoints([]);
+    }
+  });
 
-const testCvs2 = document.createElement("canvas");
-testCvs2.width = testCvs2.height = 256;
+  // The returned image data url
+  const dataUrl = ko.observable("");
 
-const testCtx2 = testCvs2.getContext("2d");
-testCtx2.fillStyle = "black";
-testCtx2.fillRect(0, 0, 128, 128);
+  // Link a virtual img
+  const img = new Image();
 
-document.body.appendChild(testCvs2);
+  const redraw = () => {
+    const texture = cvs.texture(img);
 
-console.table(
-  squareChanges(testCtx, testCtx2).map(
-    ({ square: { code, row, file }, difference }) => ({
-      code,
-      row,
-      file,
-      difference
-    })
-  )
-);
+    // Draw & Transform
+    cvs
+      .draw(texture)
+      .perspective(transformFrom, transformTo)
+      .update();
+
+    // Crop
+    const sqImage = new Image();
+    sqImage.onload = () => {
+      const sqCvs = document.createElement("canvas");
+      sqCvs.width = sqCvs.height = 256;
+      const sqCtx = sqCvs.getContext("2d");
+      sqCtx.drawImage(sqImage, 0, 0);
+
+      // Write transformed image
+      dataUrl(sqCvs.toDataURL());
+    };
+
+    sqImage.src = cvs.toDataURL();
+  };
+
+  // Load initial image
+  img.onload = redraw;
+  img.src = URL.createObjectURL(imgFile);
+
+  return {
+    original: img.src,
+    crop: dataUrl,
+    onClick: (d, e) => {
+      const bbox = e.target.getBoundingClientRect();
+      fourPoints.push({
+        x: e.clientX - bbox.x,
+        y: e.clientY - bbox.y
+      });
+    }
+  };
+};
+
+const images = ko.observableArray([]);
+
+const onNewFiles = (d, e) => {
+  images(Array.from(e.target.files).map(BoardImage));
+};
+
+ko.applyBindings({ onNewFiles, images });

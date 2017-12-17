@@ -8,9 +8,17 @@
 </head>
 
 <body>
-  <h1>Hello world!</h1>
+  <input type="file" multiple data-bind="event: { change: onNewFiles }">
 
+  <ul data-bind="foreach: images">
+    <li>
+      <img data-bind="attr: { src: original }, click: onClick">
+      <img data-bind="attr: { src: crop }">
+    </li>
+  </ul>
 
+  <script src="/libs/glfx.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
   <script src="/lib/bundle.js"></script>
 </body>
 
