@@ -15,7 +15,7 @@
     "scss": "sass style/style.scss:lib/style.css",
     "build": "webpack",
     "build:w": "webpack --watch",
-    "start": "http-server"
+    "start": "http-server -c-1"
   },
   "repository": {
     "type": "git",
