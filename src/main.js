@@ -1,52 +1,13 @@
 import { squareChanges } from "./imageHandling/squareChanges";
+import { crop } from "./imageHandling/crop";
+import { perspectiveTransform } from "./imageHandling/perspectiveTransform";
+import { squareChanges } from "./imageHandling/squareChanges";
 
-const pointReducer = (acc, { x, y }) => acc.concat(x, y);
+import FEN from "./FEN";
+import { getAllLegalMoves } from "./Moves";
+import GameState, { applyMoveToGameState } from "./GameState";
 
-/**
- * @param {[{x, y}]} refPoints
- * @param {Image} img
- * @returns {DataURL}
- */
-const perspectiveTransform = (refPoints, img) => {
-  const cvs = fx.canvas();
-
-  const from = refPoints.reduce(pointReducer, []);
-  const to = [0, 256, 0, 0, 256, 0, 256, 256];
-
-  return cvs
-    .draw(cvs.texture(img))
-    .perspective(from, to)
-    .update()
-    .toDataURL();
-};
-
-/**
- * @param {DataURL} dataURL
- * @returns {ko.observable}
- */
-const crop = (dataURL, writeTo) => {
-  const img = new Image();
-  const cvs = document.createElement("canvas");
-  cvs.width = 256;
-  cvs.height = 256;
-  const ctx = cvs.getContext("2d");
-
-  img.onload = () => {
-    ctx.drawImage(img, 0, 0);
-    writeTo(cvs.toDataURL());
-  };
-  img.src = dataURL;
-
-  return writeTo;
-};
-
-const BoardImage = imgFile => {
-  const transformFrom = ko.observableArray([
-    { x: 0, y: 256 },
-    { x: 0, y: 0 },
-    { x: 256, y: 0 },
-    { x: 256, y: 256 }
-  ]);
+const BoardImage = (imgFile, transformFrom) => {
   const fourPoints = ko.observableArray([]);
   // Write from points to transformFrom every 4th item
   fourPoints.subscribe(points => {
@@ -57,6 +18,10 @@ const BoardImage = imgFile => {
   });
 
   const myCrop = ko.observable();
+  const cropDataURL = ko.pureComputed(
+    () => (myCrop() ? myCrop().toDataURL() : null)
+  );
+
   // Link a virtual img
   const img = new Image();
 
@@ -70,9 +35,16 @@ const BoardImage = imgFile => {
   img.onload = () => redraw(transformFrom());
   img.src = URL.createObjectURL(imgFile);
 
+  const gameState = ko.observable(GameState());
+  const board = ko.pureComputed(() => gameState().board);
+
   return {
+    gameState,
+    board,
+    imageVisible: ko.observable(true),
     original: img.src,
-    crop: myCrop,
+    crop: cropDataURL,
+    cropCvs: myCrop,
     onClick: (d, e) => {
       const bbox = e.target.getBoundingClientRect();
       fourPoints.push({
@@ -83,10 +55,71 @@ const BoardImage = imgFile => {
   };
 };
 
-const images = ko.observableArray([]);
+const App = function() {
+  const transformFrom = ko.observableArray([
+    { x: 8, y: 451 },
+    { x: 23, y: 17 },
+    { x: 453, y: 24 },
+    { x: 449, y: 453 }
+  ]);
 
-const onNewFiles = (d, e) => {
-  images(Array.from(e.target.files).map(BoardImage));
+  this.toggleImages = () => {
+    this.images().forEach(bi => bi.imageVisible(!bi.imageVisible()));
+  };
+
+  this.images = ko.observableArray([]);
+  this.onNewFiles = (d, e) => {
+    this.images(
+      Array.from(e.target.files).map(img => BoardImage(img, transformFrom))
+    );
+  };
+
+  const getBestGuess = (imgBefore, imgAfter) => {
+    const ctxBefore = imgBefore.cropCvs().getContext("2d");
+    const ctxAfter = imgAfter.cropCvs().getContext("2d");
+
+    const changes = squareChanges(ctxBefore, ctxAfter);
+
+    const gameStateBefore = imgBefore.gameState();
+    const allowedMoves = getAllLegalMoves(gameStateBefore);
+
+    const possibilities = allowedMoves
+      .map(move => {
+        const fromSquareChange = changes[move.from.index].difference;
+        const toSquareChange = changes[move.to.index].difference;
+
+        return {
+          move,
+          fromSquareChange,
+          toSquareChange,
+          totalChange: fromSquareChange + toSquareChange,
+          from: move.from.code,
+          to: move.to.code
+        };
+      })
+      .sort((p1, p2) => p2.totalChange - p1.totalChange);
+
+    return possibilities[0];
+  };
+
+  this.analyze = () => {
+    const pairs = this.images().reduce((pairs, img, i, imgs) => {
+      if (imgs[i + 1]) pairs.push([img, imgs[i + 1]]);
+      return pairs;
+    }, []);
+
+    this.images().forEach((img, i) => {
+      // Last board
+      if (!pairs[i]) return;
+
+      const before = pairs[i][0];
+      const after = pairs[i][1];
+
+      const move = getBestGuess(before, after).move;
+
+      after.gameState(applyMoveToGameState(before.gameState(), move));
+    });
+  };
 };
 
-ko.applyBindings({ onNewFiles, images });
+ko.applyBindings(new App());
