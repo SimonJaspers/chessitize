@@ -110,6 +110,81 @@ export const getMoves = (state, square) => {
 };
 
 /**
+ * @param {GameState} state
+ * @param {[string]} emptySquareCodes
+ * @param {[string]} safeSquareCodes
+ * @returns {boolean}
+ */
+const castlingPrevented = (state, emptySquareCodes, safeSquareCodes) => {
+  const clearPath = emptySquareCodes
+    .map(Square.fromCode)
+    .map(sq => getPieceAtSquare(state.board, sq))
+    .every(pieceIsEmpty);
+
+  if (!clearPath) return true;
+
+  const underAttack = safeSquareCodes
+    .map(Square.fromCode)
+    .some(sq => blackPieceAttacksSquare(state, sq));
+
+  return underAttack;
+};
+
+const castleMoves = (state, square) => {
+  const piece = getPieceAtSquare(state.board, square);
+  const moves = [];
+  const opts = {
+    K: {
+      long: {
+        path: ["b1", "c1", "d1"],
+        safe: ["a1", "c1", "d1", "e1"]
+      },
+      short: {
+        path: ["f1", "g1"],
+        safe: ["f1", "g1", "h1", "e1"]
+      }
+    },
+    k: {
+      long: {
+        path: ["b8", "c8", "d8"],
+        safe: ["a8", "c8", "d8", "e8"]
+      },
+      short: {
+        path: ["f8", "g8"],
+        safe: ["f8", "g8", "h8", "e8"]
+      }
+    }
+  };
+
+  const canCastleLong = pieceIsBlack(piece)
+    ? state.blackCanCastleLong
+    : state.whiteCanCastleLong;
+
+  const canCastleShort = pieceIsBlack(piece)
+    ? state.blackCanCastleShort
+    : state.whiteCanCastleShort;
+
+  const longCastleOpts = opts[piece].long;
+  const shortCastleOpts = opts[piece].short;
+
+  if (
+    canCastleLong &&
+    !castlingPrevented(state, longCastleOpts.path, longCastleOpts.safe)
+  ) {
+    moves.push(Move(square, Square.relativeFrom(square, [0, -2]), state));
+  }
+
+  if (
+    canCastleShort &&
+    !castlingPrevented(state, shortCastleOpts.path, shortCastleOpts.safe)
+  ) {
+    moves.push(Move(square, Square.relativeFrom(square, [0, 2]), state));
+  }
+
+  return moves;
+};
+
+/**
  * Gets a list of legal moves
  * @param {GameState} state
  * @param {Square} square
@@ -121,30 +196,10 @@ export const getLegalMoves = (state, square) => {
   if (pieceIsBlack(piece) && !state.blackToMove) return [];
   if (pieceIsWhite(piece) && !state.whiteToMove) return [];
 
-  const moves = getMoves(state, square);
+  let moves = getMoves(state, square);
 
-  if (state.whiteToMove && piece === "K" && !whiteInCheck(state)) {
-    if (state.whiteCanCastleLong) {
-      const clearPath = ["b1", "c1", "d1"]
-        .map(Square.fromCode)
-        .map(sq => getPieceAtSquare(state.board, sq))
-        .map(p => (console.log(p), p))
-        .every(pieceIsEmpty);
-
-      if (clearPath) {
-        const underAttack = ["a1", "c1", "d1"]
-          .map(Square.fromCode)
-          .some(sq => blackPieceAttacksSquare(state, sq));
-
-        if (!underAttack) {
-          moves.push(Move(square, Square.relativeFrom(square, [0, 2]), state));
-        }
-      }
-    }
-
-    if (state.whiteCanCastleShort) {
-      // Check if "f1", "g1" or "h1" are under attack
-    }
+  if (piece === "K" || piece === "k") {
+    moves = moves.concat(castleMoves(state, square));
   }
 
   return moves.filter(move => !movePutsOwnKingInCheck(state, move));
