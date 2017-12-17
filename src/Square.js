@@ -54,6 +54,13 @@ Square.relativeFrom = ({ row, file }, [dRow, dFile]) =>
   Square(row + dRow, file + dFile);
 
 /**
+ * Returns a square for an index starting left to right, top to bottom
+ * @param {Number} i
+ * @returns {Square}
+ */
+Square.fromIndex = i => Square(Math.floor(i / 8), i % 8);
+
+/**
  * Return a list of all the squares in a chess board
  * @returns {[Square]}
  */
