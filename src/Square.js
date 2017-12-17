@@ -24,6 +24,7 @@ const fileOrder = "abcdefgh";
 const Square = (rowNr, fileNr) => ({
   row: rowNr,
   file: fileNr,
+  index: rowNr * 8 + fileNr,
   code: `${fileOrder[fileNr]}${rowOrder[rowNr]}`,
   coord: [rowNr, fileNr],
   inBounds: rowNr >= 0 && rowNr <= 7 && fileNr >= 0 && fileNr <= 7

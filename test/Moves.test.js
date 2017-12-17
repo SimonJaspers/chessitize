@@ -1,7 +1,7 @@
 import GameState, { applyMoveToGameState } from "./../src/GameState";
 import Square from "./../src/Square";
 import FEN from "./../src/FEN";
-import { getLegalMoves } from "./../src/Moves";
+import { getLegalMoves, getAllLegalMoves } from "./../src/Moves";
 import { Move, getMoves } from "./../src/Moves";
 
 import assert from "assert";
@@ -191,21 +191,7 @@ describe("Moves", () => {
   describe("Start position", () => {
     it("allows 20 moves", () => {
       const state = GameState();
-
-      const squares = state.board.reduce(
-        (squares, row, rowNr) =>
-          row.reduce(
-            (squares, piece, fileNr) => squares.concat(Square(rowNr, fileNr)),
-            squares
-          ),
-        []
-      );
-
-      const moves = squares.reduce(
-        (moves, square) => moves.concat(getLegalMoves(state, square)),
-        []
-      );
-
+      const moves = getAllLegalMoves(state);
       assert.equal(moves.length, 20);
     });
   });
@@ -254,6 +240,22 @@ describe("Moves", () => {
 
         assert.equal(moves.some(m => m.castles), true);
       });
+
+      it("moves both rook & king", () => {
+        const canCastleQ = FEN.fenToGameState(
+          "r1bqk1nr/ppp2ppp/2n1p3/3p4/1b1P4/2N1B3/PPPQPPPP/R3KBNR w KQkq - 4 5"
+        );
+
+        const moves = getLegalMoves(canCastleQ, Square.fromCode("e1"));
+        const castles = moves.find(m => m.castles);
+        const newState = applyMoveToGameState(canCastleQ, castles);
+
+        const afterCastle = FEN.fenToGameState(
+          "r1bqk1nr/ppp2ppp/2n1p3/3p4/1b1P4/2N1B3/PPPQPPPP/2KR1BNR b kq - 5 5"
+        );
+
+        assert.deepEqual(newState.board, afterCastle.board);
+      });
     });
 
     describe("kingside", () => {
@@ -288,6 +290,26 @@ describe("Moves", () => {
 
         assert.equal(noCastle.blackCanCastleLong, false);
         assert.equal(noCastle.blackCanCastleShort, false);
+      });
+
+      it("moves both rook & king", () => {
+        const canCastleK = FEN.fenToGameState(
+          "r1bqk2r/ppp2ppp/2n1pn2/3p4/1b1P4/2N1BN2/PPPQPPPP/2KR1B1R b kq - 7 6"
+        );
+
+        assert.equal(canCastleK.blackCanCastleShort, true);
+
+        const moves = getLegalMoves(canCastleK, Square.fromCode("e8"));
+        const castles = moves.find(m => m.castles);
+        console.log("castle move:", castles);
+
+        const newState = applyMoveToGameState(canCastleK, castles);
+
+        const afterCastle = FEN.fenToGameState(
+          "r1bq1rk1/ppp2ppp/2n1pn2/3p4/1b1P4/2N1BN2/PPPQPPPP/2KR1B1R w - - 8 7"
+        );
+
+        assert.deepEqual(newState.board, afterCastle.board);
       });
     });
   });

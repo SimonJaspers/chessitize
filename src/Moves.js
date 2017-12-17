@@ -2,7 +2,8 @@ import GameState, {
   applyMoveToGameState,
   whiteInCheck,
   blackInCheck,
-  blackPieceAttacksSquare
+  blackPieceAttacksSquare,
+  whitePieceAttacksSquare
 } from "./GameState";
 import Square from "./Square";
 
@@ -123,9 +124,13 @@ const castlingPrevented = (state, emptySquareCodes, safeSquareCodes) => {
 
   if (!clearPath) return true;
 
+  const attackCeck = state.whiteToMove
+    ? blackPieceAttacksSquare
+    : whitePieceAttacksSquare;
+
   const underAttack = safeSquareCodes
     .map(Square.fromCode)
-    .some(sq => blackPieceAttacksSquare(state, sq));
+    .some(sq => attackCeck(state, sq));
 
   return underAttack;
 };
@@ -185,7 +190,7 @@ const castleMoves = (state, square) => {
 };
 
 /**
- * Gets a list of legal moves
+ * Gets a list of legal moves for the piece on a square
  * @param {GameState} state
  * @param {Square} square
  * @returns {[Move]}
@@ -204,6 +209,16 @@ export const getLegalMoves = (state, square) => {
 
   return moves.filter(move => !movePutsOwnKingInCheck(state, move));
 };
+
+/**
+ * Gets a list of all legal moves for a state
+ * @param {GameState} state
+ */
+export const getAllLegalMoves = state =>
+  Square.allInBoard().reduce(
+    (moves, square) => moves.concat(getLegalMoves(state, square)),
+    []
+  );
 
 /**
  * @param {GameState} state

@@ -113,15 +113,38 @@ const castleOptionsDiff = (state, move) => {
  * @param {Move} move
  * @returns {GameState}
  */
-export const applyMoveToGameState = (state, move) =>
-  GameState(
-    movePieceInBoard(state.board, move.from, move.to),
+export const applyMoveToGameState = (state, move) => {
+  let board = movePieceInBoard(state.board, move.from, move.to);
+
+  if (move.castles) {
+    // Move the rook as well
+    const queenSide = move.to.file === 2; // "c"
+    const relFrom = queenSide ? [0, -2] : [0, 1];
+    const relTo = queenSide ? [0, 1] : [0, -1];
+
+    console.log(
+      "must move rook from",
+      Square.relativeFrom(move.to, relFrom).code,
+      "to",
+      Square.relativeFrom(move.to, relTo).code
+    );
+
+    board = movePieceInBoard(
+      board,
+      Square.relativeFrom(move.to, relFrom),
+      Square.relativeFrom(move.to, relTo)
+    );
+  }
+
+  return GameState(
+    board,
     state.whiteToMove ? "b" : "w",
     castleOptionsDiff(state, move),
     move.isPawnMove && move.to.row - move.from.row === 2, // TODO: (Simon) get en passant square
     state.halfMoves + 1,
     state.moveNr + (state.whiteToMove ? 1 : 0)
   );
+};
 
 /**
  * @param {GameState} state
@@ -167,6 +190,18 @@ export const blackInCheck = state => {
 export const blackPieceAttacksSquare = (state, square) => {
   return Square.allInBoard()
     .filter(sq => pieceIsBlack(getPieceAtSquare(state.board, sq)))
+    .some(sq => getMoves(state, sq).some(move => move.to.code === square.code));
+};
+
+/**
+ * Returns whether one of the white pieces attacks a square
+ * @param {GameState} state
+ * @param {Square} square
+ * @returns {boolean}
+ */
+export const whitePieceAttacksSquare = (state, square) => {
+  return Square.allInBoard()
+    .filter(sq => pieceIsWhite(getPieceAtSquare(state.board, sq)))
     .some(sq => getMoves(state, sq).some(move => move.to.code === square.code));
 };
 
