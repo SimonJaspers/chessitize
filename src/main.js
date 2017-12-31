@@ -45,6 +45,7 @@ const BoardImage = (imgFile, transformFrom) => {
     original: img.src,
     crop: cropDataURL,
     cropCvs: myCrop,
+    moveRating: ko.observableArray([]),
     onClick: (d, e) => {
       const bbox = e.target.getBoundingClientRect();
       fourPoints.push({
@@ -88,18 +89,24 @@ const App = function() {
         const fromSquareChange = changes[move.from.index].difference;
         const toSquareChange = changes[move.to.index].difference;
 
+        // Note: (Simon) The "from" square is always empty after a move
+        //               Therefore, it's expected to show a large diff
+        //               making it easier to recognise.
+
+        const totalChange = 1.5 * fromSquareChange + toSquareChange;
+
         return {
           move,
           fromSquareChange,
           toSquareChange,
-          totalChange: fromSquareChange + toSquareChange,
+          totalChange,
           from: move.from.code,
           to: move.to.code
         };
       })
       .sort((p1, p2) => p2.totalChange - p1.totalChange);
 
-    return possibilities[0];
+    return possibilities;
   };
 
   this.analyze = () => {
@@ -115,8 +122,9 @@ const App = function() {
       const before = pairs[i][0];
       const after = pairs[i][1];
 
-      const move = getBestGuess(before, after).move;
-
+      const moves = getBestGuess(before, after);
+      const move = moves[0].move;
+      after.moveRating(moves);
       after.gameState(applyMoveToGameState(before.gameState(), move));
     });
   };
