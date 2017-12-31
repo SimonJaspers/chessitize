@@ -16,15 +16,14 @@
     <li>
       <img data-bind="visible: imageVisible, attr: { src: original }, click: onClick">
       <img data-bind="attr: { src: crop }">
-      <div>
-        <pre data-bind="text: board().map(r => r.join(' ')).join('\n')">
-        </pre>
-      </div>
+      <table class="Board" data-bind="renderBoard: board">
+      </table>
     </li>
   </ul>
 
   <script src="/libs/glfx.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>
+  <script src="/src/bindings/renderBoard.js"></script>
   <script src="/lib/bundle.js"></script>
 </body>
 

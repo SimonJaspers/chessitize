@@ -6,4 +6,15 @@
   margin: 0;
   padding: 0; }
 
+.Board {
+  border-collapse: collapse; }
+  .Board td {
+    height: 40px;
+    width: 40px;
+    text-align: center; }
+  .Board tr:nth-child(odd) td:nth-child(even) {
+    background: #ccc; }
+  .Board tr:nth-child(even) td:nth-child(odd) {
+    background: #ccc; }
+
 /*# sourceMappingURL=style.css.map */
