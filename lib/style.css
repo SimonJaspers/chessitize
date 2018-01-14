@@ -7,14 +7,54 @@
   padding: 0; }
 
 .Board {
-  border-collapse: collapse; }
+  border-collapse: collapse;
+  display: inline-block; }
+  .is-overlayMode .Board {
+    position: absolute;
+    left: 0; }
   .Board td {
-    height: 40px;
-    width: 40px;
-    text-align: center; }
+    height: 32px;
+    width: 32px;
+    text-align: center;
+    background-color: rgba(255, 255, 255, 0.4); }
   .Board tr:nth-child(odd) td:nth-child(even) {
-    background: #ccc; }
+    background: rgba(55, 124, 210, 0.8); }
   .Board tr:nth-child(even) td:nth-child(odd) {
-    background: #ccc; }
+    background: rgba(55, 124, 210, 0.8); }
+
+.Moves {
+  border-collapse: collapse;
+  font-family: sans-serif;
+  padding-bottom: 1em; }
+  .Moves thead {
+    background: #454545;
+    color: white;
+    font-size: 0.8em; }
+  .Moves tbody > tr:nth-child(odd) {
+    background: #efefef; }
+  .Moves th,
+  .Moves td {
+    padding: 0.25em 0.5em; }
+
+.NumberCell {
+  text-align: right; }
+
+.Controls {
+  position: fixed;
+  background: #efefef;
+  top: 0;
+  width: 100%;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5em;
+  z-index: 1; }
+
+.StateList {
+  padding-top: 50px; }
+
+.StateList-item {
+  margin: 0.5em; }
 
 /*# sourceMappingURL=style.css.map */

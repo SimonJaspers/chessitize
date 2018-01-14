@@ -8,15 +8,39 @@
 </head>
 
 <body>
-  <input type="file" multiple data-bind="event: { change: onNewFiles }">
-  <button data-bind="click: toggleImages">show/hide images</button>
-  <button data-bind="click: analyze">analyze</button>
-
-  <ul data-bind="foreach: images">
-    <li>
+  <div class="Controls">
+    <input type="file" multiple data-bind="event: { change: onNewFiles }">
+    <button data-bind="click: toggleImages">show/hide images</button>
+    <button data-bind="click: analyze">analyze</button>
+    <label>
+      <input type="checkbox" data-bind="checked: overlay">Overlay
+    </label>
+  </div>
+  <ul class="StateList" data-bind="foreach: images, css: { 'is-overlayMode': overlay }">
+    <li class="StateList-item">
       <img data-bind="visible: imageVisible, attr: { src: original }, click: onClick">
       <img data-bind="attr: { src: crop }">
       <table class="Board" data-bind="renderBoard: board">
+      </table>
+      <table class="Moves" data-bind="visible: moveRating().length">
+        <thead>
+          <tr>
+            <th>from</th>
+            <th>to</th>
+            <th class="NumberCell">from change</th>
+            <th class="NumberCell">to change</th>
+            <th class="NumberCell">total change</th>
+          </tr>
+        </thead>
+        <tbody data-bind="foreach: moveRating().slice(0, 3)">
+          <tr>
+            <td data-bind="text: from"></td>
+            <td data-bind="text: to"></td>
+            <td data-bind="text: fromSquareChange" class="NumberCell"></td>
+            <td data-bind="text: toSquareChange" class="NumberCell"></td>
+            <td data-bind="text: totalChange" class="NumberCell"></td>
+          </tr>
+        </tbody>
       </table>
     </li>
   </ul>

@@ -9,6 +9,7 @@ import GameState, { applyMoveToGameState } from "./GameState";
 
 const BoardImage = (imgFile, transformFrom) => {
   const fourPoints = ko.observableArray([]);
+
   // Write from points to transformFrom every 4th item
   fourPoints.subscribe(points => {
     if (points.length === 4) {
@@ -41,7 +42,7 @@ const BoardImage = (imgFile, transformFrom) => {
   return {
     gameState,
     board,
-    imageVisible: ko.observable(true),
+    imageVisible: ko.observable(false),
     original: img.src,
     crop: cropDataURL,
     cropCvs: myCrop,
@@ -58,10 +59,10 @@ const BoardImage = (imgFile, transformFrom) => {
 
 const App = function() {
   const transformFrom = ko.observableArray([
-    { x: 8, y: 451 },
-    { x: 23, y: 17 },
-    { x: 453, y: 24 },
-    { x: 449, y: 453 }
+    { x: 120, y: 45 },
+    { x: 403, y: 43 },
+    { x: 394, y: 325 },
+    { x: 125, y: 323 }
   ]);
 
   this.toggleImages = () => {
@@ -93,7 +94,7 @@ const App = function() {
         //               Therefore, it's expected to show a large diff
         //               making it easier to recognise.
 
-        const totalChange = 1.5 * fromSquareChange + toSquareChange;
+        const totalChange = Math.round(1.5 * fromSquareChange + toSquareChange);
 
         return {
           move,
@@ -128,6 +129,8 @@ const App = function() {
       after.gameState(applyMoveToGameState(before.gameState(), move));
     });
   };
+
+  this.overlay = ko.observable(false);
 };
 
 ko.applyBindings(new App());
