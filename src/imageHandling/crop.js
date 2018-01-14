@@ -1,5 +1,6 @@
 /**
  * @param {DataURL} dataURL
+ * @param {ko.observable} writeTo
  * @returns {ko.observable}
  */
 export const crop = (dataURL, writeTo) => {

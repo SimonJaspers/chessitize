@@ -1,7 +1,6 @@
 import { squareChanges } from "./imageHandling/squareChanges";
 import { crop } from "./imageHandling/crop";
 import { perspectiveTransform } from "./imageHandling/perspectiveTransform";
-import { squareChanges } from "./imageHandling/squareChanges";
 
 import FEN from "./FEN";
 import { getAllLegalMoves } from "./Moves";
@@ -76,11 +75,14 @@ const App = function() {
     );
   };
 
+  this.lastChanges = ko.observableArray([]).extend({ rateLimit: 40 });
+
   const getBestGuess = (imgBefore, imgAfter) => {
     const ctxBefore = imgBefore.cropCvs().getContext("2d");
     const ctxAfter = imgAfter.cropCvs().getContext("2d");
 
     const changes = squareChanges(ctxBefore, ctxAfter);
+    this.lastChanges(changes.map(c => c.debugCvs));
 
     const gameStateBefore = imgBefore.gameState();
     const allowedMoves = getAllLegalMoves(gameStateBefore);
@@ -131,6 +133,11 @@ const App = function() {
   };
 
   this.overlay = ko.observable(false);
+};
+
+ko.bindingHandlers.placeAll = {
+  init: (el, va) =>
+    ko.computed(() => ko.unwrap(va()).forEach(e => el.appendChild(e)))
 };
 
 ko.applyBindings(new App());
