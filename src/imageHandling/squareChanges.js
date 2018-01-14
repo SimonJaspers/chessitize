@@ -1,6 +1,8 @@
 import Square from "./../Square";
 import { range } from "./../utils";
 
+const sum = (x, y) => x + y;
+
 // Note: (Simon) If we want to test this, we might want to use:
 //               https://www.npmjs.com/package/get-image-data
 
@@ -137,43 +139,78 @@ const edgeValue = (threshold, pxPerRow, greyScaleData, pxNr) => {
   return result;
 };
 
+/**
+ *
+ * @param {[Number]} arr1
+ * @param {[Number]} arr2
+ * @returns {Number}
+ */
+const sumDiff = (arr1, arr2) => Math.abs(arr1.reduce(sum) - arr2.reduce(sum));
+
 const edgePixelCountDiff = (ctxBefore, ctxAfter) => {
   // Note: (Simon) The board has to be square
   const squareSize = ctxBefore.canvas.width / 8;
-  const THRESHOLD = 20;
+  const PADDING = 0.0625; // Has to result in round nr!
+  const innerSquareSize = squareSize - 2 * PADDING * squareSize;
+  const THRESHOLD = 15;
 
   const changes = Square.allInBoard().map(square => {
-    const before = getImageDataForSquare(square, squareSize, ctxBefore);
-    const after = getImageDataForSquare(square, squareSize, ctxAfter);
+    const before = getCenterImageDataForSquare(
+      square,
+      squareSize,
+      PADDING,
+      ctxBefore
+    );
+    const after = getCenterImageDataForSquare(
+      square,
+      squareSize,
+      PADDING,
+      ctxAfter
+    );
 
     const gsBefore = rgbaToGreyScaleValues(before.data);
     const gsAfter = rgbaToGreyScaleValues(after.data);
 
     const edgesBefore = gsBefore.map((v, i, all) =>
-      edgeValue(THRESHOLD, squareSize, all, i)
+      edgeValue(THRESHOLD, innerSquareSize, all, i)
     );
 
     const edgesAfter = gsAfter.map((v, i, all) =>
-      edgeValue(THRESHOLD, squareSize, all, i)
+      edgeValue(THRESHOLD, innerSquareSize, all, i)
+    );
+
+    const debugCvs = document.createElement("canvas");
+    debugCvs.width = debugCvs.height = innerSquareSize;
+
+    const imageDataCopy = new ImageData(
+      new Uint8ClampedArray(before.data),
+      before.width,
+      before.height
     );
 
     edgesBefore.forEach((v, i) => {
       if (v === 0) return;
       i *= 4;
-      before.data[i + 0] = 255;
-      before.data[i + 1] = 0;
-      before.data[i + 2] = 0;
+      imageDataCopy.data[i + 0] = 255;
+      imageDataCopy.data[i + 1] = 0;
+      imageDataCopy.data[i + 2] = 0;
     });
 
-    const debugCvs = document.createElement("canvas");
-    debugCvs.width = debugCvs.height = squareSize;
-    debugCvs.getContext("2d").putImageData(before, 0, 0);
+    edgesAfter.forEach((v, i) => {
+      if (v === 0) return;
+      i *= 4;
+      imageDataCopy.data[i + 0] = 0;
+      imageDataCopy.data[i + 1] = 255;
+      imageDataCopy.data[i + 2] = 0;
+    });
+
+    debugCvs.getContext("2d").putImageData(imageDataCopy, 0, 0);
 
     return {
       square,
       before,
       after,
-      difference: totalDiff(edgesBefore, edgesAfter),
+      difference: sumDiff(edgesBefore, edgesAfter),
       debugCvs
     };
   });

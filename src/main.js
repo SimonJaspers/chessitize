@@ -75,7 +75,9 @@ const App = function() {
     );
   };
 
-  this.lastChanges = ko.observableArray([]).extend({ rateLimit: 40 });
+  this.lastLastChanges = ko.observable([]);
+  this.lastChanges = ko.observableArray([]);
+  this.lastChanges.subscribe(this.lastLastChanges, null, "beforeChange");
 
   const getBestGuess = (imgBefore, imgAfter) => {
     const ctxBefore = imgBefore.cropCvs().getContext("2d");
@@ -136,8 +138,16 @@ const App = function() {
 };
 
 ko.bindingHandlers.placeAll = {
-  init: (el, va) =>
-    ko.computed(() => ko.unwrap(va()).forEach(e => el.appendChild(e)))
+  init: (el, va) => {
+    ko.computed(() => {
+      el.innerHTML = "";
+      const innerEls = ko.unwrap(va());
+      innerEls.forEach((e, i) => {
+        if (i % 8 === 0) el.appendChild(document.createElement("br"));
+        el.appendChild(e);
+      });
+    });
+  }
 };
 
 ko.applyBindings(new App());
