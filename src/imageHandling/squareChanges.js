@@ -18,6 +18,22 @@ const getImageDataForSquare = (square, squareSize, boardCtx) =>
   );
 
 /**
+ *
+ * @param {Square} square
+ * @param {Number} squareSize
+ * @param {Number} cutOff Between 0 and 1
+ * @param {CanvasRenderingContext2D} boardCtx
+ * @returns {ImageData}
+ */
+const getCenterImageDataForSquare = (square, squareSize, cutOff, boardCtx) =>
+  boardCtx.getImageData(
+    square.file * squareSize + squareSize * cutOff,
+    square.row * squareSize + squareSize * cutOff,
+    squareSize - 2 * cutOff * squareSize,
+    squareSize - 2 * cutOff * squareSize
+  );
+
+/**
  * Calculates the absolute difference between two arrays by summing every index
  * @param {[Number]} arr1
  * @param [Number]} arr2
@@ -44,8 +60,18 @@ export const squareChanges = (ctxBefore, ctxAfter) => {
   const squareSize = ctxBefore.canvas.width / 8;
 
   const changes = Square.allInBoard().map(square => {
-    const before = getImageDataForSquare(square, squareSize, ctxBefore);
-    const after = getImageDataForSquare(square, squareSize, ctxAfter);
+    const before = getCenterImageDataForSquare(
+      square,
+      squareSize,
+      0.25,
+      ctxBefore
+    );
+    const after = getCenterImageDataForSquare(
+      square,
+      squareSize,
+      0.25,
+      ctxAfter
+    );
 
     return {
       square,
