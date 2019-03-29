@@ -91,6 +91,11 @@ Create a Raspberry Pi chess clock with a camera attachment. When a player hits t
  - Run `scss` to compile scss files
  - Run `npm start` to start a local server
  
+## The web UI
+![chessitize UI](https://github.com/SimonJaspers/chessitize/blob/master/ChessitizeUI.jpg)
+
+In the web UI, you can upload a set of pictures and analyze the game. Note that the order of the pictures can get a bit buggy. Make sure the pictures in the folder are sorted alphabetically...
+ 
 ## Example Picture Set
 You can use [this picture set](https://drive.google.com/drive/folders/1mpYWX-ZhJFkkVNh0HMidfy0dE3Km0pcN) for testing purposes. It's based on a game between Byrne and Fischer (check out the [annotated version](http://www.chessgames.com/perl/chessgame?gid=1008419&wm=b023%3Fq%24q&kpage=18)).
 
