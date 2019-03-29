@@ -65,4 +65,4 @@ package-lock.json
 .vscode/launch.json
 
 # Generated files
-lib
+lib/
