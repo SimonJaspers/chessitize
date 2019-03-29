@@ -65,30 +65,31 @@ Create a Raspberry Pi chess clock with a camera attachment. When a player hits t
 ## TODO
 
  1. ~~Configure build tools & tests~~ 😪
- 2. Create logic to extract potential moves from two photos:
+ 2. ~~Create logic to extract potential moves from two photos:~~
  
 ```
  (photoOfChessBoardBefore, photoOfChessBoardAfter) -> [ { move, likeliness } ]
 ```
- 3. Create logic to go from a [FEN Code](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation) to a list of possible moves:
+ 3. ~~Create logic to go from a [FEN Code](https://en.wikipedia.org/wiki/Forsyth%E2%80%93Edwards_Notation) to a list of possible moves:~~
 
 ```
    FEN -> [ possibleMove ]
 ```
 
- 4. Create logic for:
+ 4. ~~Create logic for:~~
 
 ``` 
    (initialFEN, [ { move, likeliness } ], [ possibleMove ]) -> nextFEN
 ```
+ 5. Implement a probability tree to deal with multiple valid candidate moves. Each path to a final possible game state has a summed probability score. Once a path gets below a threshold, it can be removed from the tree. This will allow us to "correct" mistakes made earlier. E.g.: if we're not sure if `a3` or `a4` was played by white, but we see black play `bxa4`, we can confirm `a4` as the most likely move.
 
 ## Development tools
  - Run `npm install` to get started
  - Run `npm test` to run tests *once* (try to remember to do this before pushing...)
  - Run `npm run test:w` to automatically compile test bundles and run tests.
  - Run `build` to compile main javascript bundle
- - Run `scss` to compile scss files. (Make sure to `gem install sass` first)
- - Run `npm start` to start a local server (Make sure to `npm install -g http-server` first)
+ - Run `scss` to compile scss files
+ - Run `npm start` to start a local server
  
 ## Example Picture Set
 You can use [this picture set](https://drive.google.com/drive/folders/1mpYWX-ZhJFkkVNh0HMidfy0dE3Km0pcN) for testing purposes. It's based on a game between Byrne and Fischer (check out the [annotated version](http://www.chessgames.com/perl/chessgame?gid=1008419&wm=b023%3Fq%24q&kpage=18)).
