@@ -63,3 +63,6 @@ package-lock.json
 *.map
 .sass-cache/
 .vscode/launch.json
+
+# Generated files
+lib
