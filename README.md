@@ -95,9 +95,11 @@ You can use [this picture set](https://drive.google.com/drive/folders/1mpYWX-ZhJ
 
 In the real game, white resigns on move 22. The picture set includes a fictive ending based on Fischer's own comments. The PGN (_cursive_ wasn't played in the real game, but _is_ in the picture set:
 
+> ```
 > 1. d4 Nf6 2. c4 g6 3. g3 c6 4. Bg2 d5
 > 5. cxd5 cxd5 6. Nc3 Bg7 7. e3 O-O 8. Nge2 Nc6
 > 9. O-O b6 10. b3 Ba6 11. Ba3 Re8 12. Qd2 e5
 > 13. dxe5 Nxe5 14. Rfd1 Nd3 15. Qc2 Nxf2 16. Kxf2 Ng4+
 > 17. Kg1 Nxe3 18. Qd2 Nxg2 19. Kxg2 d4 20. Nxd4 Bb7+
 > 21. Kf1 Qd7 _22.Qf2 Qh3+ 23.Kg1 Re1+ 24.Rxe1 Bxd4 25.Qxd4 Qg2#_
+> ```
