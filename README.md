@@ -92,7 +92,7 @@ Create a Raspberry Pi chess clock with a camera attachment. When a player hits t
  - Run `npm start` to start a local server
  
 ## The web UI
-![chessitize UI](https://github.com/SimonJaspers/chessitize/blob/master/ChessitizeUI.jpg)
+![chessitize UI](https://github.com/SimonJaspers/chessitize/blob/master/ChessitizeUI.gif)
 
 In the web UI, you can upload a set of pictures and analyze the game. Note that the order of the pictures can get a bit buggy. Make sure the pictures in the folder are sorted alphabetically...
  
