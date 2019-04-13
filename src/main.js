@@ -156,6 +156,7 @@ const App = function() {
       const move = moves[0].move;
       after.debugOverlay(this.lastChanges());
       after.moveRating(moves);
+      after.selectedMove(moves[0]);
       after.gameState(applyMoveToGameState(before.gameState(), move));
     });
   };
