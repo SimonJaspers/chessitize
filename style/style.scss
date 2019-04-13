@@ -7,6 +7,10 @@
   padding: 0;
 }
 
+img {
+  position: block;
+}
+
 .Board {
   border-collapse: collapse;
   display: inline-block;
@@ -51,6 +55,10 @@
     background: #efefef;
   }
 
+  tbody > tr.is-selected {
+    background: yellow;
+  }
+
   th,
   td {
     padding: 0.25em 0.5em;
@@ -80,4 +88,17 @@
 
 .StateList-item {
   margin: 0.5em;
+  display: flex;
+}
+
+.BoardOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity .4s ease-in-out;
+
+  .is-edgeMode & {
+    opacity: 1;
+  }
 }

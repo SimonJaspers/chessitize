@@ -13,13 +13,19 @@
     <button data-bind="click: toggleImages">show/hide images</button>
     <button data-bind="click: analyze">analyze</button>
     <label>
+      <input type="checkbox" data-bind="checked: showEdges">Show edges
+    </label>
+    <label>
       <input type="checkbox" data-bind="checked: overlay">Overlay
     </label>
   </div>
-  <ul class="StateList" data-bind="foreach: images, css: { 'is-overlayMode': overlay }">
+  <ul class="StateList" data-bind="foreach: images, css: { 'is-overlayMode': overlay, 'is-edgeMode': showEdges }">
     <li class="StateList-item">
       <img data-bind="visible: imageVisible, attr: { src: original }, click: onClick">
-      <img data-bind="attr: { src: crop }">
+      <div>
+        <img data-bind="attr: { src: crop }">
+        <div data-bind="placeAll: visibleDebugOverlay" class="BoardOverlay"></div>
+      </div>
       <table class="Board" data-bind="renderBoard: board">
       </table>
       <table class="Moves" data-bind="visible: moveRating().length">
@@ -33,7 +39,7 @@
           </tr>
         </thead>
         <tbody data-bind="foreach: moveRating().slice(0, 3)">
-          <tr>
+          <tr data-bind="click: $parent.selectMove, css: { 'is-selected': $parent.selectedMove() === $data }">
             <td data-bind="text: from"></td>
             <td data-bind="text: to"></td>
             <td data-bind="text: fromSquareChange" class="NumberCell"></td>
@@ -44,9 +50,6 @@
       </table>
     </li>
   </ul>
-
-  <div data-bind="placeAll: lastLastChanges"></div>
-  <div data-bind="placeAll: lastChanges"></div>
 
   <script src="/libs/glfx.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/knockout/3.4.2/knockout-debug.js"></script>

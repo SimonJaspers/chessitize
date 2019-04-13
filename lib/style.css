@@ -6,6 +6,9 @@
   margin: 0;
   padding: 0; }
 
+img {
+  position: block; }
+
 .Board {
   border-collapse: collapse;
   display: inline-block; }
@@ -32,6 +35,8 @@
     font-size: 0.8em; }
   .Moves tbody > tr:nth-child(odd) {
     background: #efefef; }
+  .Moves tbody > tr.is-selected {
+    background: yellow; }
   .Moves th,
   .Moves td {
     padding: 0.25em 0.5em; }
@@ -55,6 +60,16 @@
   padding-top: 50px; }
 
 .StateList-item {
-  margin: 0.5em; }
+  margin: 0.5em;
+  display: flex; }
+
+.BoardOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  transition: opacity .4s ease-in-out; }
+  .is-edgeMode .BoardOverlay {
+    opacity: 1; }
 
 /*# sourceMappingURL=style.css.map */

@@ -179,39 +179,41 @@ const edgePixelCountDiff = (ctxBefore, ctxAfter) => {
       edgeValue(THRESHOLD, innerSquareSize, all, i)
     );
 
-    const debugCvs = document.createElement("canvas");
-    debugCvs.width = debugCvs.height = innerSquareSize;
+    const debugOverlay = document.createElement("canvas");
+    debugOverlay.width = debugOverlay.height = innerSquareSize;
 
-    const imageDataCopy = new ImageData(
-      new Uint8ClampedArray(before.data),
+    const overlayImagedata = new ImageData(
+      new Uint8ClampedArray(before.width * before.height * 4),
       before.width,
       before.height
     );
-
+    
     edgesBefore.forEach((v, i) => {
       if (v === 0) return;
       i *= 4;
-      imageDataCopy.data[i + 0] = 255;
-      imageDataCopy.data[i + 1] = 0;
-      imageDataCopy.data[i + 2] = 0;
+      overlayImagedata.data[i + 0] = 255;
+      overlayImagedata.data[i + 1] = 0;
+      overlayImagedata.data[i + 2] = 0;
+      overlayImagedata.data[i + 3] = 255;
     });
 
     edgesAfter.forEach((v, i) => {
       if (v === 0) return;
       i *= 4;
-      imageDataCopy.data[i + 0] = 0;
-      imageDataCopy.data[i + 1] = 255;
-      imageDataCopy.data[i + 2] = 0;
+      overlayImagedata.data[i + 0] = 0;
+      overlayImagedata.data[i + 1] = 255;
+      overlayImagedata.data[i + 2] = 0;
+      overlayImagedata.data[i + 3] = 255;
     });
 
-    debugCvs.getContext("2d").putImageData(imageDataCopy, 0, 0);
+    debugOverlay.getContext("2d").putImageData(overlayImagedata, 0, 0);
 
     return {
       square,
       before,
       after,
       difference: sumDiff(edgesBefore, edgesAfter),
-      debugCvs
+      debugOverlay
     };
   });
 

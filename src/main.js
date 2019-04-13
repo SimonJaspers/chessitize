@@ -1,8 +1,6 @@
 import { squareChanges } from "./imageHandling/squareChanges";
 import { crop } from "./imageHandling/crop";
 import { perspectiveTransform } from "./imageHandling/perspectiveTransform";
-
-import FEN from "./FEN";
 import { getAllLegalMoves } from "./Moves";
 import GameState, { applyMoveToGameState } from "./GameState";
 
@@ -37,6 +35,22 @@ const BoardImage = (imgFile, transformFrom) => {
 
   const gameState = ko.observable(GameState());
   const board = ko.pureComputed(() => gameState().board);
+  const selectedMove = ko.observable(null);
+
+  // A list of 64 canvases showing pixel edges
+  const debugOverlay = ko.observableArray([]);
+  const visibleDebugOverlay = ko.pureComputed(
+    () => {
+      if (!selectedMove()) return debugOverlay();
+   
+      const { move: { from, to } } = selectedMove();
+      return debugOverlay()
+        .map((cvs, i) => i === from.index || i === to.index
+          ? cvs
+          : null
+        );
+    }
+  );
 
   return {
     gameState,
@@ -52,7 +66,17 @@ const BoardImage = (imgFile, transformFrom) => {
         x: e.clientX - bbox.x,
         y: e.clientY - bbox.y
       });
-    }
+    },
+    selectMove: move => {
+      if (selectedMove() === move) {
+        selectedMove(null);
+      } else {
+        selectedMove(move);
+      }
+    },
+    selectedMove,
+    debugOverlay,
+    visibleDebugOverlay
   };
 };
 
@@ -84,7 +108,8 @@ const App = function() {
     const ctxAfter = imgAfter.cropCvs().getContext("2d");
 
     const changes = squareChanges(ctxBefore, ctxAfter);
-    this.lastChanges(changes.map(c => c.debugCvs));
+    // Side effect: store debug overlay
+    this.lastChanges(changes.map(c => c.debugOverlay));
 
     const gameStateBefore = imgBefore.gameState();
     const allowedMoves = getAllLegalMoves(gameStateBefore);
@@ -129,22 +154,30 @@ const App = function() {
 
       const moves = getBestGuess(before, after);
       const move = moves[0].move;
+      after.debugOverlay(this.lastChanges());
       after.moveRating(moves);
       after.gameState(applyMoveToGameState(before.gameState(), move));
     });
   };
 
   this.overlay = ko.observable(false);
+  this.showEdges = ko.observable(true);
 };
 
 ko.bindingHandlers.placeAll = {
   init: (el, va) => {
     ko.computed(() => {
       el.innerHTML = "";
-      const innerEls = ko.unwrap(va());
+      const innerEls = ko.unwrap(va()) || [];
       innerEls.forEach((e, i) => {
-        if (i % 8 === 0) el.appendChild(document.createElement("br"));
-        el.appendChild(e);
+        if (e) { // Allow for gaps
+          Object.assign(e.style, {
+            position: "absolute",
+            top: `${Math.floor(i / 8) * 32 + 2}px`,
+            left: `${i % 8 * 32 + 2}px`
+          })
+          el.appendChild(e);
+        }
       });
     });
   }
